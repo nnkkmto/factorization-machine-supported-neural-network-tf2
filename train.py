@@ -1,7 +1,7 @@
 import tensorflow as tf
 
 from dao import MovieLens100kDao as learning_dao
-from models import FactorizationMachines
+from models import FactorizationMachines, FNN
 
 dao = learning_dao()
 dao.build()
@@ -12,7 +12,12 @@ features_info = dao.features_info
 
 auc = tf.keras.metrics.AUC(num_thresholds=1000)
 optimizer = tf.keras.optimizers.Adam(lr=0.01,decay=0.1)
-model = FactorizationMachines(features_info)
+fm_model = FactorizationMachines(features_info)
+fm_model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=[auc])
+fm_model.fit(x=X_train, y=y_train, epochs=100, batch_size=100000, validation_split=0.2)
+fm_model.evaluate(x=X_test, y=y_test)
+
+model = FNN(fm_model)
 model.compile(optimizer=optimizer, loss='binary_crossentropy', metrics=[auc])
 model.fit(x=X_train, y=y_train, epochs=100, batch_size=100000, validation_split=0.2)
 model.evaluate(x=X_test, y=y_test)

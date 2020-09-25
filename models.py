@@ -95,7 +95,7 @@ class FactorizationMachines(tf.keras.Model):
 
 
 class FNN(tf.keras.Model):
-    def __init__(self, fm_model, is_fm_trainable=False, dense_dim=20, dropout_rate=0.3):
+    def __init__(self, fm_model, is_fm_trainable=True, dense_dim=20, dropout_rate=0.3):
         super(FNN, self).__init__()
         self.fm_model = fm_model
         self.fm_model.trainable = is_fm_trainable
